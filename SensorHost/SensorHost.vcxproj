@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{EF1BF058-32F1-40F0-913B-BD207EB73EEE}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <NMakeIncludeSearchPath>src;src\wiringPi;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6\arm-linux-gnueabihf;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6\backward;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0001\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0003\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0002\include-fixed;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\arm-linux-gnueabihf;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeForcedIncludes>$(ProjectDir)\gcc_Debug.h;$(VISUALGDB_DIR)\gcc_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
+    <NMakeBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /build "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /clean "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /rebuild "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeReBuildCommandLine>
+    <NMakeOutput>$(ProjectDir)SensorHost-Debug.vgdbsettings</NMakeOutput>
+    <IncludePath>F:\Linux\SensorHost\SensorHost\src\wiringPi;F:\Linux\SensorHost\SensorHost\src;$(IncludePath)</IncludePath>
+    <ReferencePath>F:\Linux\SensorHost\SensorHost\src\wiringPi;F:\Linux\SensorHost\SensorHost\src;$(ReferencePath)</ReferencePath>
+    <LibraryPath />
+    <NMakePreprocessorDefinitions>__VisualGDB_CFG_Debug;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <NMakeIncludeSearchPath>$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6\arm-linux-gnueabihf;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6\backward;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0001\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0003\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0002\include-fixed;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\arm-linux-gnueabihf;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeForcedIncludes>$(ProjectDir)\gcc_Release.h;$(VISUALGDB_DIR)\gcc_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
+    <NMakePreprocessorDefinitions>__VisualGDB_CFG_Release;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /build "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /clean "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /rebuild "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeReBuildCommandLine>
+    <NMakeOutput>$(ProjectDir)SensorHost-Release.vgdbsettings</NMakeOutput>
+    <IncludePath />
+    <ReferencePath />
+    <LibraryPath />
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\client.c" />
+    <ClCompile Include="src\devices.c" />
+    <ClCompile Include="src\ishare.c" />
+    <ClCompile Include="src\main.c" />
+    <ClCompile Include="src\packet.c" />
+    <ClCompile Include="src\queue.c" />
+    <ClCompile Include="src\raspi_ext.c" />
+    <ClCompile Include="src\serial.c" />
+    <ClCompile Include="src\wiringPi\drcSerial.c" />
+    <ClCompile Include="src\wiringPi\max31855.c" />
+    <ClCompile Include="src\wiringPi\max5322.c" />
+    <ClCompile Include="src\wiringPi\mcp23008.c" />
+    <ClCompile Include="src\wiringPi\mcp23016.c" />
+    <ClCompile Include="src\wiringPi\mcp23017.c" />
+    <ClCompile Include="src\wiringPi\mcp23s08.c" />
+    <ClCompile Include="src\wiringPi\mcp23s17.c" />
+    <ClCompile Include="src\wiringPi\mcp3002.c" />
+    <ClCompile Include="src\wiringPi\mcp3004.c" />
+    <ClCompile Include="src\wiringPi\mcp3422.c" />
+    <ClCompile Include="src\wiringPi\mcp4802.c" />
+    <ClCompile Include="src\wiringPi\pcf8574.c" />
+    <ClCompile Include="src\wiringPi\pcf8591.c" />
+    <ClCompile Include="src\wiringPi\piHiPri.c" />
+    <ClCompile Include="src\wiringPi\piThread.c" />
+    <ClCompile Include="src\wiringPi\sn3218.c" />
+    <ClCompile Include="src\wiringPi\softPwm.c" />
+    <ClCompile Include="src\wiringPi\softServo.c" />
+    <ClCompile Include="src\wiringPi\softTone.c" />
+    <ClCompile Include="src\wiringPi\sr595.c" />
+    <ClCompile Include="src\wiringPi\wiringPi.c" />
+    <ClCompile Include="src\wiringPi\wiringPiI2C.c" />
+    <ClCompile Include="src\wiringPi\wiringPiSPI.c" />
+    <ClCompile Include="src\wiringPi\wiringSerial.c" />
+    <ClCompile Include="src\wiringPi\wiringShift.c" />
+    <ClCompile Include="src\wiringPi\wpiExtensions.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="debug.mak" />
+    <None Include="Makefile" />
+    <None Include="release.mak" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\client.h" />
+    <ClInclude Include="src\devices.h" />
+    <ClInclude Include="src\ishare.h" />
+    <ClInclude Include="src\packet.h" />
+    <ClInclude Include="src\queue.h" />
+    <ClInclude Include="src\raspi_ext.h" />
+    <ClInclude Include="src\serial.h" />
+    <ClInclude Include="src\wiringPi\drcSerial.h" />
+    <ClInclude Include="src\wiringPi\max31855.h" />
+    <ClInclude Include="src\wiringPi\max5322.h" />
+    <ClInclude Include="src\wiringPi\mcp23008.h" />
+    <ClInclude Include="src\wiringPi\mcp23016.h" />
+    <ClInclude Include="src\wiringPi\mcp23016reg.h" />
+    <ClInclude Include="src\wiringPi\mcp23017.h" />
+    <ClInclude Include="src\wiringPi\mcp23s08.h" />
+    <ClInclude Include="src\wiringPi\mcp23s17.h" />
+    <ClInclude Include="src\wiringPi\mcp23x08.h" />
+    <ClInclude Include="src\wiringPi\mcp23x0817.h" />
+    <ClInclude Include="src\wiringPi\mcp3002.h" />
+    <ClInclude Include="src\wiringPi\mcp3004.h" />
+    <ClInclude Include="src\wiringPi\mcp3422.h" />
+    <ClInclude Include="src\wiringPi\mcp4802.h" />
+    <ClInclude Include="src\wiringPi\pcf8574.h" />
+    <ClInclude Include="src\wiringPi\pcf8591.h" />
+    <ClInclude Include="src\wiringPi\sn3218.h" />
+    <ClInclude Include="src\wiringPi\softPwm.h" />
+    <ClInclude Include="src\wiringPi\softServo.h" />
+    <ClInclude Include="src\wiringPi\softTone.h" />
+    <ClInclude Include="src\wiringPi\sr595.h" />
+    <ClInclude Include="src\wiringPi\wiringPi.h" />
+    <ClInclude Include="src\wiringPi\wiringPiI2C.h" />
+    <ClInclude Include="src\wiringPi\wiringPiSPI.h" />
+    <ClInclude Include="src\wiringPi\wiringSerial.h" />
+    <ClInclude Include="src\wiringPi\wiringShift.h" />
+    <ClInclude Include="src\wiringPi\wpiExtensions.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

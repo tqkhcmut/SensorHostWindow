@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{e92ec046-d19a-405e-8690-d2afd28418fa}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{d7a2be69-70e5-48be-955a-612ff25255c4}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource files">
+      <UniqueIdentifier>{bedec4a0-27d6-43d9-82c0-b9c4507ef634}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Make files">
+      <UniqueIdentifier>{00fb73de-b988-49db-b034-5b2dae7abb1b}</UniqueIdentifier>
+      <Extensions>*.mak</Extensions>
+    </Filter>
+    <Filter Include="Source files\wiringPi">
+      <UniqueIdentifier>{e2e8d1d0-cbe4-4246-921b-a34f266617bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\wiringPi">
+      <UniqueIdentifier>{13841701-3874-483f-a244-0cf2d584ff88}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\wiringPi\drcSerial.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\max5322.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\max31855.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\mcp23s08.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\mcp23s17.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\mcp3002.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\mcp3004.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\mcp3422.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\mcp4802.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\mcp23008.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\mcp23016.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\mcp23017.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\pcf8574.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\pcf8591.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\piHiPri.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\piThread.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\sn3218.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\softPwm.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\softServo.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\softTone.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\sr595.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\wiringPi.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\wiringPiI2C.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\wiringPiSPI.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\wiringSerial.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\wiringShift.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wiringPi\wpiExtensions.c">
+      <Filter>Source files\wiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\client.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\devices.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ishare.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\packet.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\queue.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\raspi_ext.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\serial.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Makefile" />
+    <None Include="debug.mak">
+      <Filter>Make files</Filter>
+    </None>
+    <None Include="release.mak">
+      <Filter>Make files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\wiringPi\drcSerial.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\max5322.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\max31855.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\mcp23s08.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\mcp23s17.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\mcp23x08.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\mcp23x0817.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\mcp3002.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\mcp3004.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\mcp3422.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\mcp4802.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\mcp23008.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\mcp23016.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\mcp23016reg.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\mcp23017.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\pcf8574.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\pcf8591.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\sn3218.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\softPwm.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\softServo.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\softTone.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\sr595.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\wiringPi.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\wiringPiI2C.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\wiringPiSPI.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\wiringSerial.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\wiringShift.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wiringPi\wpiExtensions.h">
+      <Filter>Header files\wiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\client.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\devices.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ishare.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\packet.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\queue.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raspi_ext.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\serial.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
