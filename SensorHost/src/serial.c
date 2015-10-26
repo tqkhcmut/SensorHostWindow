@@ -8,10 +8,11 @@
 #include "serial.h"
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #define SERIAL_DIR_PIN 		23
-#define SERIAL_DIR_OUTPUT	{digitalWrite(SERIAL_DIR_PIN, HIGH);}
-#define SERIAL_DIR_INPUT	{digitalWrite(SERIAL_DIR_PIN, LOW);}
+#define SERIAL_DIR_OUTPUT	{digitalWrite(SERIAL_DIR_PIN, HIGH); usleep(1);}
+#define SERIAL_DIR_INPUT	{usleep(10); digitalWrite(SERIAL_DIR_PIN, LOW);}
 
 
 #ifdef _WIN32
@@ -21,7 +22,7 @@ HANDLE hSerial;
 #include <unistd.h>
 const char * SerialDevName = "/dev/ttyAMA0";
 
-const int SerialBaudrate = 115200;
+const unsigned int SerialBaudrate = 115200;
 
 int serial_fd;
 #endif

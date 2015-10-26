@@ -13,7 +13,7 @@ OBJCOPY := objcopy
 
 #Additional flags
 PREPROCESSOR_MACROS := DEBUG
-INCLUDE_DIRS := /tmp/VisualGDB/f/Linux/SensorHost/SensorHost/src /tmp/VisualGDB/f/Linux/SensorHost/SensorHost/src/wiringPi
+INCLUDE_DIRS := /home/pi/ubuntu/VisualGDB/c/Users/kieutq/LinuxApp/SensorHostWindow/SensorHost/src /home/pi/ubuntu/VisualGDB/c/Users/kieutq/LinuxApp/SensorHostWindow/SensorHost/src/wiringPi
 LIBRARY_DIRS := 
 LIBRARY_NAMES := 
 ADDITIONAL_LINKER_INPUTS := 

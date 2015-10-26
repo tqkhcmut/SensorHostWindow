@@ -41,8 +41,8 @@
     <NMakeCleanCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /clean "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /rebuild "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeReBuildCommandLine>
     <NMakeOutput>$(ProjectDir)SensorHost-Debug.vgdbsettings</NMakeOutput>
-    <IncludePath>F:\Linux\SensorHost\SensorHost\src\wiringPi;F:\Linux\SensorHost\SensorHost\src;$(IncludePath)</IncludePath>
-    <ReferencePath>F:\Linux\SensorHost\SensorHost\src\wiringPi;F:\Linux\SensorHost\SensorHost\src;$(ReferencePath)</ReferencePath>
+    <IncludePath>$(ProjectDir)\src\wiringPi;$(ProjectDir)\src;$(ProjectDir);$(IncludePath)</IncludePath>
+    <ReferencePath>$(ProjectDir);$(ProjectDir)\src\wiringPi;$(ProjectDir)\src;$(ReferencePath)</ReferencePath>
     <LibraryPath />
     <NMakePreprocessorDefinitions>__VisualGDB_CFG_Debug;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
   </PropertyGroup>

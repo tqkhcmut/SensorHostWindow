@@ -33,6 +33,13 @@
 #define IS_LITTLE_ENDIAN_BYTE_ORDER(x) ((x & 0xf0) == LITTLE_ENDIAN_BYTE_ORDER)
 /* byte order */
 
+/* Common mask */
+#define DEV_TYPE_MASK(x)			(x & 0xf0)
+#define DEV_NUMBER_MASK(x)			(x & 0x0f)
+#define DATA_TYPE_MASK(x)			(x & 0x0f)
+#define BIT_ORDER_MASK(x)			(x & 0xf0)
+
+
 /* devices type */
 #define DEV_SENSOR_TEMPERATURE		0x10
 #define DEV_SENSOR_ULTRA_SONIC		0x20
@@ -45,15 +52,18 @@
 // special device for my thesis, it have all temperature, lighting, and gas sensors
 #define DEV_MY_THESIS					0x90
 
-#define IS_SENSOR_TEMPERATURE(x) 	((x & 0xf0) == DEV_SENSOR_TEMPERATURE)
-#define IS_SENSOR_ULTRA_SONIC(x) 	((x & 0xf0) == DEV_SENSOR_ULTRA_SONIC)
-#define IS_SENSOR_GAS(x) 			((x & 0xf0) == DEV_SENSOR_GAS)
-#define IS_SENSOR_LIGTH(x) 			((x & 0xf0) == DEV_SENSOR_LIGTH)
-#define IS_BUZZER(x) 				((x & 0xf0) == DEV_BUZZER)
-#define IS_SIM900(x) 				((x & 0xf0) == DEV_SIM900)
-#define IS_RF(x) 					((x & 0xf0) == DEV_RF)
-#define IS_BLUETOOTH(x) 			((x & 0xf0) == DEV_BLUETOOTH)
-#define IS_MY_THESIS(x) 			((x & 0xf0) == DEV_MY_THESIS)
+#define DEV_BROADCAST				0xf0
+
+#define IS_SENSOR_TEMPERATURE(x) 	(DEV_TYPE_MASK(x) == DEV_SENSOR_TEMPERATURE)
+#define IS_SENSOR_ULTRA_SONIC(x) 	(DEV_TYPE_MASK(x) == DEV_SENSOR_ULTRA_SONIC)
+#define IS_SENSOR_GAS(x) 			(DEV_TYPE_MASK(x) == DEV_SENSOR_GAS)
+#define IS_SENSOR_LIGTH(x) 			(DEV_TYPE_MASK(x) == DEV_SENSOR_LIGTH)
+#define IS_BUZZER(x) 				(DEV_TYPE_MASK(x) == DEV_BUZZER)
+#define IS_SIM900(x) 				(DEV_TYPE_MASK(x) == DEV_SIM900)
+#define IS_RF(x) 					(DEV_TYPE_MASK(x) == DEV_RF)
+#define IS_BLUETOOTH(x) 			(DEV_TYPE_MASK(x) == DEV_BLUETOOTH)
+#define IS_MY_THESIS(x) 			(DEV_TYPE_MASK(x) == DEV_MY_THESIS)
+#define IS_BROADCAST_DEVICE(x)		(DEV_TYPE_MASK(x) == DEV_BROADCAST)
 /* devices type */
 
 // default time polling

@@ -3,7 +3,7 @@
 
 int getTypeLength(unsigned char type)
 {
-	switch (type & 0x0f)
+	switch (DATA_TYPE_MASK(type))
 	{
 	case TYPE_BYTE:
 		return 1; //sizeof(unsigned char);
