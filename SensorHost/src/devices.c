@@ -287,7 +287,8 @@ void * DevicePolling(void * host_number) // thread
 						printf("Thread: %d. host: %d. No device here.\n",
 								(int)polling_thread[host], host);
 #endif
-
+						dev_host[host].type = DEV_UNKNOWN;
+						dev_host[host].number = DEV_NUMBER_UNKNOWN;
 					}
 					RaspiExt_Pin_Hostx_Inactive(host);
 					pthread_mutex_unlock(&serial_access);
@@ -364,8 +365,8 @@ void * DevicePolling(void * host_number) // thread
 					printf("Thread: %d. host: %d. Unknown device type.\n",
 							(int)polling_thread[host], host);
 #endif
-					dev_host[host].type = DEV_BROADCAST;
-					dev_host[host].number = 0x0f;
+					dev_host[host].type = DEV_UNKNOWN;
+					dev_host[host].number = DEV_NUMBER_UNKNOWN;
 					break;
 				}
 			}

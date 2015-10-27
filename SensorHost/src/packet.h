@@ -50,9 +50,10 @@
 #define DEV_RF						0x70
 #define DEV_BLUETOOTH				0x80
 // special device for my thesis, it have all temperature, lighting, and gas sensors
-#define DEV_MY_THESIS					0x90
+#define DEV_MY_THESIS				0x90
 
-#define DEV_BROADCAST				0xf0
+#define DEV_UNKNOWN					0xf0
+#define DEV_NUMBER_UNKNOWN			0x0f
 
 #define IS_SENSOR_TEMPERATURE(x) 	(DEV_TYPE_MASK(x) == DEV_SENSOR_TEMPERATURE)
 #define IS_SENSOR_ULTRA_SONIC(x) 	(DEV_TYPE_MASK(x) == DEV_SENSOR_ULTRA_SONIC)
