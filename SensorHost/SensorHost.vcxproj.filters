@@ -121,13 +121,16 @@
     <ClCompile Include="src\packet.c">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="src\queue.c">
-      <Filter>Source files</Filter>
-    </ClCompile>
     <ClCompile Include="src\raspi_ext.c">
       <Filter>Source files</Filter>
     </ClCompile>
     <ClCompile Include="src\serial.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="queue.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="register.c">
       <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -237,13 +240,16 @@
     <ClInclude Include="src\packet.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="src\queue.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
     <ClInclude Include="src\raspi_ext.h">
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="src\serial.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="register.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="queue.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

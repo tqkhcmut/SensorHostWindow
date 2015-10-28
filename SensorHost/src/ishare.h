@@ -8,7 +8,7 @@
 #ifndef SRC_ISHARE_H_
 #define SRC_ISHARE_H_
 
-// #include <pthread.h>
+#include "queue.h"
 
 
 // File format
@@ -16,19 +16,11 @@
 // Sensor Type // Sensor Number // Sensor Data Count // Sensor Data // ... // Sensor Data //
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-struct iShareData
-{
-	float time; // in seconds, include 3 numbers after float point. Like this: xxx.yyy (x - seconds, y - millisecond)
-	float data; // all data must be in float format.
-	struct iShareData * next;
-};
-
 struct iShareHeader
 {
 	unsigned char SensorType;
 	unsigned char SensorNumber;
-	unsigned int SensorDataCount;
-	struct iShareData * SensorData;
+	Queue_t data_in_queue;
 };
 
 /*

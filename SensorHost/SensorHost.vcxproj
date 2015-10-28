@@ -35,7 +35,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <NMakeIncludeSearchPath>src;src\wiringPi;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6\arm-linux-gnueabihf;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6\backward;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0001\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0003\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0002\include-fixed;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\arm-linux-gnueabihf;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>src;src\wiringPi;.;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6\arm-linux-gnueabihf;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6\backward;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0001\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0003\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0002\include-fixed;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\arm-linux-gnueabihf;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <NMakeForcedIncludes>$(ProjectDir)\gcc_Debug.h;$(VISUALGDB_DIR)\gcc_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
     <NMakeBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /build "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeBuildCommandLine>
     <NMakeCleanCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /clean "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeCleanCommandLine>
@@ -61,12 +61,13 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="queue.c" />
+    <ClCompile Include="register.c" />
     <ClCompile Include="src\client.c" />
     <ClCompile Include="src\devices.c" />
     <ClCompile Include="src\ishare.c" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\packet.c" />
-    <ClCompile Include="src\queue.c" />
     <ClCompile Include="src\raspi_ext.c" />
     <ClCompile Include="src\serial.c" />
     <ClCompile Include="src\wiringPi\drcSerial.c" />
@@ -103,11 +104,12 @@
     <None Include="release.mak" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="queue.h" />
+    <ClInclude Include="register.h" />
     <ClInclude Include="src\client.h" />
     <ClInclude Include="src\devices.h" />
     <ClInclude Include="src\ishare.h" />
     <ClInclude Include="src\packet.h" />
-    <ClInclude Include="src\queue.h" />
     <ClInclude Include="src\raspi_ext.h" />
     <ClInclude Include="src\serial.h" />
     <ClInclude Include="src\wiringPi\drcSerial.h" />

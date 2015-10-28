@@ -13,7 +13,7 @@ OBJCOPY := objcopy
 
 #Additional flags
 PREPROCESSOR_MACROS := DEBUG
-INCLUDE_DIRS := /home/pi/ubuntu/VisualGDB/c/Users/kieutq/LinuxApp/SensorHostWindow/SensorHost/src /home/pi/ubuntu/VisualGDB/c/Users/kieutq/LinuxApp/SensorHostWindow/SensorHost/src/wiringPi
+INCLUDE_DIRS := /home/pi/ubuntu/VisualGDB/c/Users/kieutq/LinuxApp/SensorHostWindow/SensorHost/src /home/pi/ubuntu/VisualGDB/c/Users/kieutq/LinuxApp/SensorHostWindow/SensorHost/src/wiringPi /home/pi/ubuntu/VisualGDB/c/Users/kieutq/LinuxApp/SensorHostWindow/SensorHost
 LIBRARY_DIRS := 
 LIBRARY_NAMES := 
 ADDITIONAL_LINKER_INPUTS := 
