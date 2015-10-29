@@ -89,8 +89,15 @@ struct Packet
 	unsigned char data[]; // checksum number on the data byte number data_type
 };
 
+// some sensor data structure
+struct SonicSensor
+{
+	unsigned int time_ms; // in millis seconds
+	float distance;
+};
 struct ThesisData
 {
+	unsigned int time_s; // in seconds
 	float temperature;
 	float lighting;
 	float gas;

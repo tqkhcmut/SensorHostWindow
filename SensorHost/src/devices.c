@@ -153,7 +153,7 @@ int queryData(struct Device * dev)
 	{
 		Serial_GetData((char *) packet, packet_len);
 		// checksum check
-		if (checksum(packet) != packet->data[getTypeLength(packet->data_type)])
+		if (checksum((char *)packet) != packet->data[getTypeLength(packet->data_type)])
 		{
 #if DEVICE_DEBUG
 			printf("Wrong checksum.\n");
