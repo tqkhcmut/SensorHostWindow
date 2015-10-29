@@ -2,11 +2,13 @@
 
 #include "packet.h"
 #include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 struct RegData
 {
 	unsigned char type;
-	unsigned char number[14];
+	unsigned short number_mask;
 	struct RegData * next;
 };
 
@@ -20,47 +22,40 @@ int ValidationID(unsigned char * id)
 	if (IS_BROADCAST_ID(*id))
 		return -1;
 	pthread_mutex_lock(&reg_token);
-	tmpReg = registerde;
+	tmpReg = registered;
 	while (tmpReg != NULL)
 	{
 		if (tmpReg->type == DEV_TYPE_MASK(*id))
 		{
 			unsigned char i, tmpNum;
 			tmpNum = DEV_NUMBER_MASK(*id);
-			if (tmpNum == 0 || tmpNum > 14)
+			// scan for new number
+			for (i = 0; i < 16; i++)
 			{
-				for (i = 0; i < 14; i++)
+				if (((1 << i) & tmpReg->number_mask) == 0)
 				{
-					if (tmpReg->number[i] == 0)
-					{
-						*id = DEV_TYPE_MASK(tmpReg->type) | DEV_NUMBER_MASK(i + 1);
-						tmpReg->number[i] = DEV_NUMBER_MASK(*id);
-					}
+					// got it
+					tmpNum = i + 1;
+					tmpReg->number_mask |= (1 << i);
+					*id = tmpReg->type | tmpNum;
+					pthread_mutex_unlock(&reg_token);
+					return 0;	
 				}
 			}
-			else
-			{
-check_again:
-				for (i = 0; i < 14; i++)
-				{
-					if (tmpReg->number[i] == 0)
-					{
-						
-					}
-					if (tmpReg->number[i] == tmpNum)
-					{
-						// this mean this id have been registed
-						tmpNum++;
-						goto check_again;
-					}
-				}
-				pthread_mutex_unlock(&reg_token);
-				return -1;
-			}
+			// cannot found empty position
+			pthread_mutex_unlock(&reg_token);
+			return -1;
 		}
+		tmpReg = tmpReg->next;
 	}
+	// device not in register list, create it
+	tmpReg = (struct RegData *)calloc(1, sizeof(struct RegData));
+	tmpReg->type = DEV_TYPE_MASK(*id);
+	tmpReg->number_mask = 0x0001;
+	tmpReg->next = registered;
+	registered = tmpReg;
 	pthread_mutex_unlock(&reg_token);
-	return RegisterID(*id);
+	return 0;
 }
 int RegisterID(unsigned char id)
 {
