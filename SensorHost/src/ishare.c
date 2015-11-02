@@ -126,7 +126,7 @@ int iShare_RestoreFromDisk(struct SharedMemoryData * ishare_data, const char * f
 	return 0;
 }
 
-void * DevicePolling(void * handle_obj)
+void * iShareThread(void * handle_obj)
 {
 	
 

@@ -9,6 +9,7 @@
 #define SRC_ISHARE_H_
 
 #include "queue.h"
+#include <inttypes.h>
 
 
 // File format
@@ -29,7 +30,7 @@ struct SharedMemoryData
 {
 	unsigned char SensorType;
 	unsigned char SensorNumber;
-	size_t DataCount;
+	unsigned int DataCount;
 	void * SensorData; // sensor data struct, define in packet.h
 };
 
