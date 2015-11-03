@@ -43,8 +43,33 @@
 #include "wiringPi.h"
 #endif
 
-
 #include <pthread.h>
+#include <sqlite3.h>
+	
+#if 0
+// Pointer to Sqlite3 DB - used to access DB when open
+sqlite3 *db = NULL;
+// Path to DB file - same dir as this program's executable
+char *dbPath = "raspi_sensor.db";
+// DB Statement handle - used to run SQL statements
+sqlite3_stmt *stmt = NULL;
+
+//int recordData(int idSensor, char *name, double tempC);
+
+int recordData(int idSensor, char *name, double tempC) {
+	char *sql = "INSERT INTO SensorData(idSensor, name, temp) VALUES(?, ?, ?)";
+	sqlite3_prepare_v2(db, sql, strlen(sql), &stmt, NULL);
+	sqlite3_bind_int(stmt, 1, idSensor);
+	sqlite3_bind_text(stmt, 2, name, strlen(name), 0);
+	sqlite3_bind_double(stmt, 3, tempC);		
+
+	sqlite3_step(stmt);  // Run SQL INSERT
+
+	sqlite3_reset(stmt); // Clear statement handle for next use
+
+	return 0;
+}
+#endif 
 
 #define DEV_HOST_NUMBER 4 // 4 USB interfaces
 
@@ -55,6 +80,10 @@ struct Device dev_host[DEV_HOST_NUMBER];
 pthread_mutex_t device_control_access = PTHREAD_MUTEX_INITIALIZER;
 // protect serial access
 pthread_mutex_t serial_access = PTHREAD_MUTEX_INITIALIZER;
+
+#ifndef DEVICE_DEBUG
+#define DEViCE_DEBUG 1
+#endif
 
 int sendControl(struct Device dev)
 {
@@ -253,7 +282,7 @@ void * DevicePolling(void * host_number) // thread
 
 		if (poll_en)
 		{
-			if (dev_host[host].type != 0xff)
+			if (dev_host[host].type != 0xff) // already known device type
 			{
 				trying_time = 0;
 				while (pthread_mutex_trylock(&serial_access) != 0)
@@ -297,6 +326,8 @@ void * DevicePolling(void * host_number) // thread
 				switch (dev_host[host].type)
 				{
 				case DEV_SENSOR_TEMPERATURE:
+					RaspiExt_LED_Hostx_Config(LED_MODE_TOGGLE, 1000, host);
+					
 					if (IS_BIG_ENDIAN_BYTE_ORDER(dev_host[host].data_type))
 					{
 						my_float.f_byte[0] = dev_host[host].data[3];
@@ -332,6 +363,8 @@ void * DevicePolling(void * host_number) // thread
 
 					break;
 				case DEV_SENSOR_ULTRA_SONIC:
+					RaspiExt_LED_Hostx_Config(LED_MODE_TOGGLE, 50, host);
+					
 					my_float.f_byte[0] = dev_host[host].data[3];
 					my_float.f_byte[1] = dev_host[host].data[2];
 					my_float.f_byte[2] = dev_host[host].data[1];
@@ -340,6 +373,9 @@ void * DevicePolling(void * host_number) // thread
 						(int)polling_thread[host],
 						host,
 						my_float.f);
+					
+					// put to db
+					//recordData(DEV_SENSOR_TEMPERATURE, "Ulta-Sonic", my_float.f);
 
 					// adjust time polling
 
@@ -347,6 +383,7 @@ void * DevicePolling(void * host_number) // thread
 
 					break;
 				case DEV_SENSOR_LIGTH:
+					RaspiExt_LED_Hostx_Config(LED_MODE_TOGGLE, 50, host);
 					break;
 				case DEV_RF:
 					break;
@@ -355,10 +392,12 @@ void * DevicePolling(void * host_number) // thread
 				case DEV_BUZZER:
 					break;
 				case DEV_SENSOR_GAS:
+					RaspiExt_LED_Hostx_Config(LED_MODE_TOGGLE, 50, host);
 					break;
 				case DEV_SIM900:
 					break;
 				case DEV_MY_THESIS:
+					RaspiExt_LED_Hostx_Config(LED_MODE_TOGGLE, 1000, host);
 					break;
 				default:
 #if DEVICE_DEBUG
@@ -370,10 +409,14 @@ void * DevicePolling(void * host_number) // thread
 					break;
 				}
 			}
-			else
+			else // unknown device type
 			{
+				RaspiExt_LED_Hostx_Config(LED_MODE_OFF, 50, host);
+				
+#if DEVICE_DEBUG
 				printf("Thread: %d. host: %d. Unknown device, identifying.\n",
 						(int)polling_thread[host], host);
+#endif
 
 				// query broadcast id to identify what it is
 				// adjust time polling to 500 ms
@@ -432,7 +475,16 @@ int Device_init(void)
 {
 	int i = 0;
 	printf("Initial Sensor Host.\r\n");
-
+	
+	//char *strDeviceName = "Temperature Sensor";	
+//
+	//int rc = sqlite3_open(dbPath, &db);
+//
+	//if (rc) {
+		//fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+		//exit(0);
+	//}
+	
 	pthread_mutex_init(&device_control_access, NULL);
 	pthread_mutex_init(&serial_access, NULL);
 
@@ -499,6 +551,8 @@ int Device_destroyAll(void)
 
 	RaspiExt_DestroyAll();
 
+	////Close database
+	//sqlite3_close(db);
 	return 0;
 }
 

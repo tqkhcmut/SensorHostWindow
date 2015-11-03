@@ -24,7 +24,7 @@ CFLAGS := -ggdb -ffunction-sections -O0
 CXXFLAGS := -ggdb -ffunction-sections -O0
 ASFLAGS := 
 LDFLAGS := -Wl,-gc-sections
-COMMONFLAGS := -pthread
+COMMONFLAGS := -pthread -lsqlite3
 LINKER_SCRIPT := 
 
 START_GROUP := -Wl,--start-group

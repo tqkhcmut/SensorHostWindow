@@ -8,7 +8,7 @@
 #ifndef SRC_RASPI_EXT_H_
 #define SRC_RASPI_EXT_H_
 
-#include "global_config.h"
+//#include "global_config.h"
 
 //typedef enum LED_Mode
 //{

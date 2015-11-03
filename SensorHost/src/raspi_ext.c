@@ -40,6 +40,9 @@ pthread_t led_host3_thread;
 pthread_t led_host4_thread;
 pthread_t power_off_button_thread;
 
+pthread_mutex_t led_token = PTHREAD_MUTEX_INITIALIZER;
+//pthread_mutex_t button_token;
+
 #define LED_RUN_PIN		24
 #define LED_POWER_PIN	25
 #define LED_HOST1_PIN	7
@@ -254,46 +257,57 @@ void * LED_Thread(void * parameters)
 
 	for (;;)
 	{
-		switch (led_ctrl->mode)
+		if (pthread_mutex_trylock(&led_token) == 0)
 		{
-		case LED_MODE_ON:
-			if (led_ctrl->time_ms > 0)
+			switch (led_ctrl->mode)
 			{
-				if (led_ctrl->state == 0)
-					led_ctrl->On(&(led_ctrl->state));
-				led_ctrl->time_ms--;
-			}
-			else if (led_ctrl->time_ms == 0)
-			{
+			case LED_MODE_ON:
+				if (led_ctrl->time_ms > 0)
+				{
+					if (led_ctrl->state == 0)
+						led_ctrl->On(&(led_ctrl->state));
+					led_ctrl->time_ms--;
+				}
+				else if (led_ctrl->time_ms == 0)
+				{
+					if (led_ctrl->state == 1)
+						led_ctrl->Off(&(led_ctrl->state));
+				}
+				else
+				{
+					if (led_ctrl->state == 0)
+						led_ctrl->On(&(led_ctrl->state));
+				}
+				break;
+			case LED_MODE_OFF:
 				if (led_ctrl->state == 1)
 					led_ctrl->Off(&(led_ctrl->state));
+				break;
+			case LED_MODE_TOGGLE:
+				if (toggle_time == 0)
+				{
+					led_ctrl->Toggle(&(led_ctrl->state));
+					toggle_time = led_ctrl->time_ms;
+				}
+				if (toggle_time > 0)
+				{
+					toggle_time--;
+				}
+				break;
+			default:
+			#if RASPI_EXT_DEBUG
+				printf("LED Thread: Invalid LED mode %d.\n", led_ctrl->mode);
+				#endif
+				break;
 			}
-			else
-			{
-				if (led_ctrl->state == 0)
-					led_ctrl->On(&(led_ctrl->state));
-			}
-			break;
-		case LED_MODE_OFF:
-			if (led_ctrl->state == 1)
-				led_ctrl->Off(&(led_ctrl->state));
-			break;
-		case LED_MODE_TOGGLE:
-			if (toggle_time == 0)
-			{
-				led_ctrl->Toggle(&(led_ctrl->state));
-				toggle_time = led_ctrl->time_ms;
-			}
-			if (toggle_time > 0)
-			{
-				toggle_time--;
-			}
-			break;
-		default:
+		
+			pthread_mutex_unlock(&led_token);
+		}
+		else
+		{
 #if RASPI_EXT_DEBUG
-		printf("LED Thread: Invalid LED mode %d.\n", led_ctrl->mode);
+			printf("LED Thread: Cannot access led token.\n", led_ctrl->mode);
 #endif
-			break;
 		}
 		usleep(1000);
 	}
@@ -306,6 +320,7 @@ void * ButtonThread (void * params)
 
 	for (;;)
 	{
+		//pthread_mutex_lock(&button_token);
 		if (digitalRead(POWER_OFF_PIN) == LOW)
 		{
 			hold_time ++;
@@ -322,6 +337,7 @@ void * ButtonThread (void * params)
 #endif
 			RaspiExt_PowerOff();
 		}
+		//pthread_mutex_unlock(&button_token);
 		usleep(500000);
 	}
 	return 0;
@@ -404,6 +420,11 @@ int RaspiExt_Init(void)
 	LED_Host4.On = LED_Host4_On;
 	LED_Host4.Off = LED_Host4_Off;
 	LED_Host4.Toggle = LED_Host4_Toggle;
+		
+	pthread_mutex_init(&led_token, NULL);
+	//pthread_mutex_unlock(&led_token);
+	//pthread_mutex_init(&button_token, NULL);
+	
 #if RASPI_EXT_DEBUG
 	printf("Create thread for control LED.\n");
 #endif
@@ -443,8 +464,10 @@ int RaspiExt_LED_Run_Config(unsigned char mode, int time_ms)
 #endif
 		return -1;
 	}
+	pthread_mutex_lock(&led_token);
 	LED_Run.mode = mode;
 	LED_Run.time_ms = time_ms;
+	pthread_mutex_unlock(&led_token);
 	return 0;
 }
 int RaspiExt_LED_Power_Config(unsigned char mode, int time_ms)
@@ -456,8 +479,10 @@ int RaspiExt_LED_Power_Config(unsigned char mode, int time_ms)
 #endif
 		return -1;
 	}
+	pthread_mutex_lock(&led_token);
 	LED_Power.mode = mode;
 	LED_Power.time_ms = time_ms;
+	pthread_mutex_unlock(&led_token);
 	return 0;
 }
 int RaspiExt_LED_Hostx_Config(unsigned char mode, int time_ms, int host)
@@ -469,29 +494,40 @@ int RaspiExt_LED_Hostx_Config(unsigned char mode, int time_ms, int host)
 #endif
 		return -1;
 	}
-	switch (host)
+	if (pthread_mutex_trylock(&led_token) == 0)
 	{
-	case 1:
-		LED_Host1.mode = mode;
-		LED_Host1.time_ms = time_ms;
-		break;
-	case 2:
-		LED_Host2.mode = mode;
-		LED_Host2.time_ms = time_ms;
-		break;
-	case 3:
-		LED_Host3.mode = mode;
-		LED_Host3.time_ms = time_ms;
-		break;
-	case 4:
-		LED_Host4.mode = mode;
-		LED_Host4.time_ms = time_ms;
-		break;
-	default:
+		
+		switch (host)
+		{
+		case 1:
+			LED_Host1.mode = mode;
+			LED_Host1.time_ms = time_ms;
+			break;
+		case 2:
+			LED_Host2.mode = mode;
+			LED_Host2.time_ms = time_ms;
+			break;
+		case 3:
+			LED_Host3.mode = mode;
+			LED_Host3.time_ms = time_ms;
+			break;
+		case 4:
+			LED_Host4.mode = mode;
+			LED_Host4.time_ms = time_ms;
+			break;
+		default:
+		#if RASPI_EXT_DEBUG
+			printf("RaspiExt LED Host Config: Invalid host %d.\n", host);
+			#endif
+			return -1;
+		}
+		pthread_mutex_unlock(&led_token);
+	}
+	else
+	{
 #if RASPI_EXT_DEBUG
-		printf("RaspiExt LED Host Config: Invalid host %d.\n", host);
-#endif
-		return -1;
+		printf("LED Hostx Config: Cannot access led tocken.\n");
+#endif 
 	}
 	return 0;
 }
