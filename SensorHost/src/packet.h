@@ -81,6 +81,16 @@
 #define BROADCAST_ID	0xff
 #define IS_BROADCAST_ID(x) (x == BROADCAST_ID)
 
+struct LongID
+{
+	unsigned char type;
+	union __int
+	{
+		int iID;
+		unsigned char bID[4];
+	} id;
+};
+
 struct Packet
 {
 	unsigned char id;	// include type and order in BCD number
