@@ -252,5 +252,8 @@
     <ClInclude Include="queue.h">
       <Filter>Header files</Filter>
     </ClInclude>
+    <ClInclude Include="global_config.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

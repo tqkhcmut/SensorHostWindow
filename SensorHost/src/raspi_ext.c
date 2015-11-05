@@ -253,7 +253,7 @@ void LED_Host4_Toggle(unsigned char * currState)
 void * LED_Thread(void * parameters)
 {
 	struct LED_Control * led_ctrl = (struct LED_Control *) parameters;
-	unsigned int toggle_time = led_ctrl->time_ms;
+	unsigned int toggle_time = 0;
 
 	for (;;)
 	{

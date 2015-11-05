@@ -28,8 +28,8 @@
     #endif
 #elif __linux
     // linux
-#include <wiringPi.h>
-#include <wiringSerial.h>
+#include "wiringPi/wiringPi.h"
+#include "wiringPi/wiringSerial.h"
 #elif __unix // all unices not caught above
     // Unix
 #elif __posix

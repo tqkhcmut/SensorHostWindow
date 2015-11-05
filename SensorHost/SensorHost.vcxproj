@@ -104,6 +104,7 @@
     <None Include="release.mak" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="global_config.h" />
     <ClInclude Include="queue.h" />
     <ClInclude Include="register.h" />
     <ClInclude Include="src\client.h" />
