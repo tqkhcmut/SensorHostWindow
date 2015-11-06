@@ -108,15 +108,16 @@ CREATE TABLE [sensors] (
 // some speacial informations for each sensors
 
 // Ultra Sonic
-const char * UltraSonic_name = "Ultra Sonic";
-const char * UltraSonic_description = "Measure distance use ultra sonic waveform.";
-const char * UltraSonic_code = "US";
-const char * UltraSonic_symbol = "US";
-const char * UltraSonic_unit = "cm";
+char * UltraSonic_name = "Ultra Sonic";
+char * UltraSonic_description = "Measure distance use ultra sonic waveform.";
+char * UltraSonic_code = "US";
+char * UltraSonic_symbol = "US";
+char * UltraSonic_unit = "cm";
 
-const char * sensor_types = "INSERT INTO sensor_types(sensor_types_id, name, description) VALUES(?, ?, ?)";
-const char * sensor_values = "INSERT INTO sensor_values(sensor_values_id, sensors_id, sensor_value, measured_timestamp, created) VALUES(?, ?, ?, ?, ?)";
-const char * sensors = "INSERT INTO sensors(sensors_id, sensor_types_id, name, code, data_symbol, sample_time, sample_speed, unit) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+char * sensor_types = "INSERT INTO sensor_types(sensor_types_id, name, description) VALUES(?, ?, ?)";
+char * sensor_values = "INSERT INTO sensor_values(sensor_values_id, sensors_id, sensor_value, measured_timestamp, created) VALUES(?, ?, ?, ?, ?)";
+char * sensor_values_short = "INSERT INTO sensor_values(sensor_value, measured_timestamp) VALUES(?, ?)";
+char * sensors = "INSERT INTO sensors(sensors_id, sensor_types_id, name, code, data_symbol, sample_time, sample_speed, unit) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 
 int DB_Record_sensor_types(int sensor_types_id, char *name, char * description) 
 {
@@ -152,6 +153,29 @@ int DB_Record_sensor_values(int sensor_values_id, int sensors_id, float sensor_v
 		sqlite3_bind_double(stmt, 3, sensor_value);
 		sqlite3_bind_double(stmt, 4, measured_timestamp);
 		sqlite3_bind_int(stmt, 5, created);
+
+		sqlite3_step(stmt);  // Run SQL INSERT
+
+		sqlite3_reset(stmt); // Clear statement handle for next use
+
+		pthread_mutex_unlock(&db_token);
+	}
+	else
+	{
+#if DEVICE_DEBUG 
+		printf("Cannot access db token.\n")
+#endif
+			return - 1;
+	}
+	return 0;
+}
+int DB_Record_sensor_values_short(float sensor_value, float measured_timestamp)
+{
+	if (pthread_mutex_trylock(&db_token) == 0)
+	{	
+		sqlite3_prepare_v2(db, sensor_values_short, strlen(sensor_values_short), &stmt, NULL);
+		sqlite3_bind_double(stmt, 3, sensor_value);
+		sqlite3_bind_double(stmt, 4, measured_timestamp);
 
 		sqlite3_step(stmt);  // Run SQL INSERT
 
@@ -501,7 +525,7 @@ void * DevicePolling(void * host_number) // thread
 
 					break;
 				case DEV_SENSOR_ULTRA_SONIC:
-					RaspiExt_LED_Hostx_Config(LED_MODE_TOGGLE, 50, host);
+					RaspiExt_LED_Hostx_Config(LED_MODE_TOGGLE, 100, host);
 					
 					my_float.f_byte[0] = dev_host[host].data[3];
 					my_float.f_byte[1] = dev_host[host].data[2];
@@ -514,18 +538,19 @@ void * DevicePolling(void * host_number) // thread
 					
 					// put to db
 #if DATABASE
-					// put this device into database
-					if (DB_IsExist_sensors(dev_host[host].number, dev_host[host].type, UltraSonic_name, 
-						UltraSonic_code, UltraSonic_symbol, 30, 10, UltraSonic_unit) == 0) // not exist
-					{
-						DB_Record_sensors(dev_host[host].number, dev_host[host].type, UltraSonic_name, 
-							UltraSonic_code, UltraSonic_symbol, 30, 10, UltraSonic_unit);
-					}
-					if (DB_IsExist_sensor_types(dev_host[host].type, UltraSonic_name, UltraSonic_description) == 0) // not exist
-					{
-						DB_Record_sensor_types(dev_host[host].type, UltraSonic_name, UltraSonic_description);
-					}
-					//DB_Record_sensor_values(dev_host[host].type, UltraSonic_name, UltraSonic_description);
+					//// put this device into database
+					//if (DB_IsExist_sensors(dev_host[host].number, dev_host[host].type, UltraSonic_name, 
+						//UltraSonic_code, UltraSonic_symbol, 30, 10, UltraSonic_unit) == 0) // not exist
+					//{
+						//DB_Record_sensors(dev_host[host].number, dev_host[host].type, UltraSonic_name, 
+							//UltraSonic_code, UltraSonic_symbol, 30, 10, UltraSonic_unit);
+					//}
+					//if (DB_IsExist_sensor_types(dev_host[host].type, UltraSonic_name, UltraSonic_description) == 0) // not exist
+					//{
+						//DB_Record_sensor_types(dev_host[host].type, UltraSonic_name, UltraSonic_description);
+					//}
+					////DB_Record_sensor_values(dev_host[host].type, UltraSonic_name, UltraSonic_description);
+					DB_Record_sensor_values_short(my_float.f, 0);
 #endif
 
 					// adjust time polling
