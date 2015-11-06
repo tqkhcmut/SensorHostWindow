@@ -8,7 +8,7 @@
 #ifndef SRC_ISHARE_H_
 #define SRC_ISHARE_H_
 
-#include "queue.h"
+#include "../queue.h"
 #include <inttypes.h>
 
 

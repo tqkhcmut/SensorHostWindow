@@ -40,10 +40,13 @@
 
 #ifdef __linux
 #include <unistd.h>
-#include "wiringPi.h"
+#include "wiringPi/wiringPi.h"
 #endif
 
 #include <pthread.h>
+	
+#include "../queue.h"
+#include "../register.h"
 
 #define DEV_HOST_NUMBER 4 // 4 USB interfaces
 
@@ -56,7 +59,7 @@ pthread_mutex_t device_control_access = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t serial_access = PTHREAD_MUTEX_INITIALIZER;
 
 #ifndef DEVICE_DEBUG
-#define DEViCE_DEBUG 0
+#define DEViCE_DEBUG 1
 #endif
 
 #ifndef DATABASE
@@ -211,12 +214,19 @@ int sendControl(struct Device dev)
 	int packet_len = 3 + getTypeLength(dev.data_type);
 	struct Packet * packet = malloc(packet_len);
 
-	packet->id = dev.number + dev.type;
+	packet->id = dev.number | dev.type;
 	packet->cmd = CMD_CONTROL;
-	packet->data_type = dev.data_type;
+#if __BYTE_ORDER == __BIG_ENDIAN
+	packet->data_type = (dev->data_type & 0x0f) | BIG_ENDIAN_BYTE_ORDER;
+#else
+	packet->data_type = (dev.data_type & 0x0f) | LITTLE_ENDIAN_BYTE_ORDER;
+#endif
 	memcpy(packet->data, dev.data, packet_len - 3);
+	// add checksum byte
+	*(((char *)packet) + packet_len) = checksum((char *)packet);
 
 	Serial_SendMultiBytes((unsigned char *) packet, packet_len);
+	free(packet);
 	return 0;
 }
 
@@ -403,7 +413,7 @@ void * DevicePolling(void * host_number) // thread
 
 		if (poll_en)
 		{
-			if (dev_host[host].type != 0xff) // already known device type
+			if (dev_host[host].type != DEV_UNKNOWN) // already known device type
 			{
 				trying_time = 0;
 				while (pthread_mutex_trylock(&serial_access) != 0)
@@ -437,6 +447,13 @@ void * DevicePolling(void * host_number) // thread
 						printf("Thread: %d. host: %d. No device here.\n",
 								(int)polling_thread[host], host);
 #endif
+						// TODO: unregister this device
+						unsigned char reg_id = dev_host[host].number | dev_host[host].type;
+						printf("Thread: %d. host: %d. Unregister device %X.\n",
+							(int)polling_thread[host],
+							host, 
+							reg_id);	
+						UnRegisterID(&reg_id);
 						dev_host[host].type = DEV_UNKNOWN;
 						dev_host[host].number = DEV_NUMBER_UNKNOWN;
 					}
@@ -587,6 +604,24 @@ void * DevicePolling(void * host_number) // thread
 						printf("Thread: %d. host: %d. Got data from device.\n",
 								(int)polling_thread[host], host);
 #endif
+						// TODO: register new id
+						unsigned char reg_id = dev_host[host].type | dev_host[host].number;
+						if (RegisterID(&reg_id) != 0)
+						{
+							printf("Thread: %d. host: %d. Fail to register new device.\n",
+								(int)polling_thread[host],
+								host);
+						}
+						else
+						{
+							printf("Thread: %d. host: %d. Registered new device %X.\n",
+								(int)polling_thread[host],
+								host, 
+								reg_id);							
+						}
+						dev_host[host].type = DEV_TYPE_MASK(reg_id);
+						dev_host[host].number = DEV_NUMBER_MASK(reg_id);
+						sendControl(dev_host[host]);
 					}
 					else
 					{
@@ -698,7 +733,8 @@ int Device_destroyAll(void)
 	if (db != NULL)
 		// Close database
 		sqlite3_close(db);
-#endif
+#endif
+
 	return 0;
 }
 

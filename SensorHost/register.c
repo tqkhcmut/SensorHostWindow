@@ -1,6 +1,6 @@
 #include "register.h"
 
-#include "packet.h"
+#include "src/packet.h"
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
