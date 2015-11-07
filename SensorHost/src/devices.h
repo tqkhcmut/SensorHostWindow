@@ -11,6 +11,16 @@
 //#include "global_config.h"
 #include "packet.h"
 
+
+#ifndef DEVICE_DEBUG
+#define DEVICE_DEBUG 0
+#endif
+
+#ifndef DATABASE
+#define DATABASE 1
+#endif
+
+
 struct polling_control
 {
 	unsigned char destroy;

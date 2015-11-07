@@ -58,21 +58,13 @@ pthread_mutex_t device_control_access = PTHREAD_MUTEX_INITIALIZER;
 // protect serial access
 pthread_mutex_t serial_access = PTHREAD_MUTEX_INITIALIZER;
 
-#ifndef DEVICE_DEBUG
-#define DEViCE_DEBUG 1
-#endif
-
-#ifndef DATABASE
-#define DATABASE 1
-#endif
-
 #if DATABASE
 #include <sqlite3.h>
 	
 // Pointer to Sqlite3 DB - used to access DB when open
 sqlite3 *db = NULL;
 // Path to DB file - same dir as this program's executable
-const char *dbPath = "raspi_sensor.db";
+const char *dbPath = "../raspi_sensor.db";
 // DB Statement handle - used to run SQL statements
 sqlite3_stmt *stmt = NULL;
 
@@ -108,16 +100,16 @@ CREATE TABLE [sensors] (
 // some speacial informations for each sensors
 
 // Ultra Sonic
-char * UltraSonic_name = "Ultra Sonic";
-char * UltraSonic_description = "Measure distance use ultra sonic waveform.";
-char * UltraSonic_code = "US";
-char * UltraSonic_symbol = "US";
-char * UltraSonic_unit = "cm";
+const char * UltraSonic_name = "Ultra Sonic";
+const char * UltraSonic_description = "Measure distance use ultra sonic waveform.";
+const char * UltraSonic_code = "US";
+const char * UltraSonic_symbol = "US";
+const char * UltraSonic_unit = "cm";
 
-char * sensor_types = "INSERT INTO sensor_types(sensor_types_id, name, description) VALUES(?, ?, ?)";
-char * sensor_values = "INSERT INTO sensor_values(sensor_values_id, sensors_id, sensor_value, measured_timestamp, created) VALUES(?, ?, ?, ?, ?)";
-char * sensor_values_short = "INSERT INTO sensor_values(sensor_value, measured_timestamp) VALUES(?, ?)";
-char * sensors = "INSERT INTO sensors(sensors_id, sensor_types_id, name, code, data_symbol, sample_time, sample_speed, unit) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+const char * sensor_types = "INSERT INTO sensor_types(sensor_types_id, name, description) VALUES(?, ?, ?)";
+const char * sensor_values = "INSERT INTO sensor_values(sensor_values_id, sensors_id, sensor_value, measured_timestamp, created) VALUES(?, ?, ?, ?, ?)";
+const char * sensor_values_short = "INSERT INTO sensor_values(sensor_value, measured_timestamp) VALUES(?, ?)";
+const char * sensors = "INSERT INTO sensors(sensors_id, sensor_types_id, name, code, data_symbol, sample_time, sample_speed, unit) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 
 int DB_Record_sensor_types(int sensor_types_id, char *name, char * description) 
 {
@@ -126,7 +118,7 @@ int DB_Record_sensor_types(int sensor_types_id, char *name, char * description)
 		sqlite3_prepare_v2(db, sensor_types, strlen(sensor_types), &stmt, NULL);
 		sqlite3_bind_int(stmt, 1, sensor_types_id);
 		sqlite3_bind_text(stmt, 2, name, strlen(name), 0);
-		sqlite3_bind_text(stmt, 2, description, strlen(description), 0);	
+		sqlite3_bind_text(stmt, 3, description, strlen(description), 0);	
 
 		sqlite3_step(stmt);  // Run SQL INSERT
 
@@ -137,7 +129,7 @@ int DB_Record_sensor_types(int sensor_types_id, char *name, char * description)
 	else
 	{
 #if DEVICE_DEBUG
-		printf("Cannot access db token.\n")
+		printf("Cannot access db token.\n");
 #endif
 			return - 1;
 	}
@@ -145,6 +137,9 @@ int DB_Record_sensor_types(int sensor_types_id, char *name, char * description)
 }
 int DB_Record_sensor_values(int sensor_values_id, int sensors_id, float sensor_value, float measured_timestamp, unsigned int created)
 {
+#if DEVICE_DEBUG 
+	printf("DB_Record_sensor_values.\n");
+#endif
 	if (pthread_mutex_trylock(&db_token) == 0)
 	{	
 		sqlite3_prepare_v2(db, sensor_values, strlen(sensor_values), &stmt, NULL);
@@ -163,7 +158,7 @@ int DB_Record_sensor_values(int sensor_values_id, int sensors_id, float sensor_v
 	else
 	{
 #if DEVICE_DEBUG 
-		printf("Cannot access db token.\n")
+		printf("Cannot access db token.\n");
 #endif
 			return - 1;
 	}
@@ -171,11 +166,32 @@ int DB_Record_sensor_values(int sensor_values_id, int sensors_id, float sensor_v
 }
 int DB_Record_sensor_values_short(float sensor_value, float measured_timestamp)
 {
+#if DEVICE_DEBUG 
+	printf("DB_Record_sensor_values_short.\n");
+#endif
 	if (pthread_mutex_trylock(&db_token) == 0)
 	{	
-		sqlite3_prepare_v2(db, sensor_values_short, strlen(sensor_values_short), &stmt, NULL);
-		sqlite3_bind_double(stmt, 3, sensor_value);
-		sqlite3_bind_double(stmt, 4, measured_timestamp);
+		if (sqlite3_prepare(db, sensor_values_short, strlen(sensor_values_short), &stmt, NULL) != SQLITE_OK)
+		{
+#if DEVICE_DEBUG 
+			printf("DB_Record_sensor_values_short: error occur while sqlite3_prepare.\n");
+#endif
+			return - 1;
+		}
+		if (sqlite3_bind_double(stmt, 1, sensor_value) != SQLITE_OK)
+		{
+#if DEVICE_DEBUG 
+			printf("DB_Record_sensor_values_short: error occur while sqlite3_bind_double.\n");
+#endif
+			return -1;
+		}
+		if (sqlite3_bind_double(stmt, 2, measured_timestamp) != SQLITE_OK)
+		{
+#if DEVICE_DEBUG 
+			printf("DB_Record_sensor_values_short: error occur while sqlite3_bind_double.\n");
+#endif
+			return -1;
+		}
 
 		sqlite3_step(stmt);  // Run SQL INSERT
 
@@ -186,7 +202,7 @@ int DB_Record_sensor_values_short(float sensor_value, float measured_timestamp)
 	else
 	{
 #if DEVICE_DEBUG 
-		printf("Cannot access db token.\n")
+		printf("Cannot access db token.\n");
 #endif
 			return - 1;
 	}
@@ -194,17 +210,20 @@ int DB_Record_sensor_values_short(float sensor_value, float measured_timestamp)
 }
 int DB_Record_sensors(int sensors_id, int sensor_types_id, char *name, char * code, char * data_symbol, int sample_time, int sample_speed, char * unit) 
 {
+#if DEVICE_DEBUG
+	printf("DB_Record_sensors.\n");
+#endif
 	if (pthread_mutex_trylock(&db_token) == 0)
 	{	
-	sqlite3_prepare_v2(db, sensors, strlen(sensors), &stmt, NULL);
+	sqlite3_prepare(db, sensors, strlen(sensors), &stmt, NULL);
 	sqlite3_bind_int(stmt, 1, sensors_id);
-	sqlite3_bind_int(stmt, 1, sensor_types_id);
-	sqlite3_bind_text(stmt, 2, name, strlen(name), 0);
-	sqlite3_bind_text(stmt, 2, code, strlen(code), 0);	
-	sqlite3_bind_text(stmt, 2, data_symbol, strlen(data_symbol), 0);	
-	sqlite3_bind_int(stmt, 1, sample_time);
-	sqlite3_bind_int(stmt, 1, sample_speed);
-	sqlite3_bind_text(stmt, 2, unit, strlen(unit), 0);	
+	sqlite3_bind_int(stmt, 2, sensor_types_id);
+	sqlite3_bind_text(stmt, 3, name, strlen(name), 0);
+	sqlite3_bind_text(stmt, 4, code, strlen(code), 0);	
+	sqlite3_bind_text(stmt, 5, data_symbol, strlen(data_symbol), 0);	
+	sqlite3_bind_int(stmt, 6, sample_time);
+	sqlite3_bind_int(stmt, 7, sample_speed);
+	sqlite3_bind_text(stmt, 8, unit, strlen(unit), 0);	
 
 	sqlite3_step(stmt);  // Run SQL INSERT
 
@@ -215,7 +234,7 @@ int DB_Record_sensors(int sensors_id, int sensor_types_id, char *name, char * co
 	else
 	{
 #if DEVICE_DEBUG
-		printf("Cannot access db token.\n")
+		printf("Cannot access db token.\n");
 #endif
 			return - 1;
 	}
@@ -356,7 +375,7 @@ int queryData(struct Device * dev)
 		printf("\n");
 #endif
 
-		if (dev->data_type != (packet->data_type & 0x0f))
+		if (dev->data_type != DATA_TYPE_MASK(packet->data_type))
 		{
 			free(dev->data);
 			if (IS_MY_THESIS(packet->data_type & 0x0f))
@@ -399,7 +418,7 @@ void * DevicePolling(void * host_number) // thread
 	unsigned int time_poll = 0;
 	unsigned char destroy = 0;
 	int host = (int) host_number;
-	unsigned char trying_time = 0;
+	unsigned char trying_time = 0, dev_disconnect_try_time = 3;
 	float_struct_t my_float;
 
 	if (host >= DEV_HOST_NUMBER)
@@ -464,6 +483,7 @@ void * DevicePolling(void * host_number) // thread
 								(int)polling_thread[host], host);
 						DeviceInfo(&dev_host[host]);
 #endif
+						dev_disconnect_try_time = 3;
 					}
 					else
 					{
@@ -471,15 +491,22 @@ void * DevicePolling(void * host_number) // thread
 						printf("Thread: %d. host: %d. No device here.\n",
 								(int)polling_thread[host], host);
 #endif
+						if (dev_disconnect_try_time == 0)
+						{						
 						// TODO: unregister this device
-						unsigned char reg_id = dev_host[host].number | dev_host[host].type;
-						printf("Thread: %d. host: %d. Unregister device %X.\n",
-							(int)polling_thread[host],
-							host, 
-							reg_id);	
-						UnRegisterID(&reg_id);
-						dev_host[host].type = DEV_UNKNOWN;
-						dev_host[host].number = DEV_NUMBER_UNKNOWN;
+							unsigned char reg_id = dev_host[host].number | dev_host[host].type;
+							printf("Thread: %d. host: %d. Unregister device %X.\n",
+								(int)polling_thread[host],
+								host, 
+								reg_id);	
+							UnRegisterID(&reg_id);
+							dev_host[host].type = DEV_UNKNOWN;
+							dev_host[host].number = DEV_NUMBER_UNKNOWN;
+						}
+						else
+						{
+							dev_disconnect_try_time--;
+						}
 					}
 					RaspiExt_Pin_Hostx_Inactive(host);
 					pthread_mutex_unlock(&serial_access);
@@ -550,7 +577,7 @@ void * DevicePolling(void * host_number) // thread
 						//DB_Record_sensor_types(dev_host[host].type, UltraSonic_name, UltraSonic_description);
 					//}
 					////DB_Record_sensor_values(dev_host[host].type, UltraSonic_name, UltraSonic_description);
-					DB_Record_sensor_values_short(my_float.f, 0);
+					DB_Record_sensor_values_short(my_float.f, millis()/1000);
 #endif
 
 					// adjust time polling
@@ -698,8 +725,8 @@ int Device_init(void)
 	{
 		printf("Initial Sensor Host %d parameters.\r\n", i);
 		dev_host[i].data_type = TYPE_FLOAT;
-		dev_host[i].number = 0xff;	// unknown
-		dev_host[i].type = 0xff;		// unknown
+		dev_host[i].number = DEV_NUMBER_UNKNOWN;	// unknown
+		dev_host[i].type = DEV_UNKNOWN;		// unknown
 		dev_host[i].data = NULL;
 		dev_host[i].polling_control.enable = 0;
 		dev_host[i].polling_control.time_poll_ms = 200;
