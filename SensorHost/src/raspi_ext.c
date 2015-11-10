@@ -6,7 +6,7 @@
  */
 
 #include "raspi_ext.h"
-#include "wiringPi.h"
+#include "wiringPi/wiringPi.h"
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>

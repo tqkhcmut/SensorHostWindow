@@ -35,7 +35,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <NMakeIncludeSearchPath>$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0004\SensorHost\src;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0004\SensorHost\src\wiringPi;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0004\SensorHost;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6\arm-linux-gnueabihf;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6\backward;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0001\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0003\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0002\include-fixed;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\arm-linux-gnueabihf;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>VisualGDB\c\Users\kieutq\LinuxApp\SensorHostWindow\SensorHost\src;VisualGDB\c\Users\kieutq\LinuxApp\SensorHostWindow\SensorHost\src\wiringPi;VisualGDB\c\Users\kieutq\LinuxApp\SensorHostWindow\SensorHost;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6\arm-linux-gnueabihf;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\c++\4.6\backward;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0001\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0003\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0002\include-fixed;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include\arm-linux-gnueabihf;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.1.21\0000\include;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <NMakeForcedIncludes>$(ProjectDir)\gcc_Debug.h;$(VISUALGDB_DIR)\gcc_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
     <NMakeBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /build "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeBuildCommandLine>
     <NMakeCleanCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /clean "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeCleanCommandLine>
@@ -61,6 +61,7 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="db_com.c" />
     <ClCompile Include="queue.c" />
     <ClCompile Include="register.c" />
     <ClCompile Include="src\client.c" />
@@ -104,9 +105,11 @@
     <None Include="release.mak" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="db_com.h" />
     <ClInclude Include="global_config.h" />
     <ClInclude Include="queue.h" />
     <ClInclude Include="register.h" />
+    <ClInclude Include="SQLiteAPI.h" />
     <ClInclude Include="src\client.h" />
     <ClInclude Include="src\devices.h" />
     <ClInclude Include="src\ishare.h" />

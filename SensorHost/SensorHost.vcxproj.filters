@@ -133,6 +133,9 @@
     <ClCompile Include="register.c">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="db_com.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
@@ -253,6 +256,12 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="global_config.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="db_com.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="SQLiteAPI.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

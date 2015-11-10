@@ -47,6 +47,7 @@
 	
 #include "../queue.h"
 #include "../register.h"
+#include "../db_com.h"
 
 #define DEV_HOST_NUMBER 4 // 4 USB interfaces
 
@@ -735,6 +736,9 @@ int Device_init(void)
 		printf("Create thread poll for Sensor Host %d.\r\n", i);
 		pthread_create(&polling_thread[i], NULL, &DevicePolling, (void *)i);
 	}
+	
+	// create database push polling
+	db_com_init(dev_host);
 	return 0;
 }
 int Device_startPooling(int host_number)
