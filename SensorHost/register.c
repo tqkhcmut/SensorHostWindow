@@ -49,7 +49,7 @@ int RegisterID(unsigned char * id)
 		tmpReg = tmpReg->next;
 	}
 	// device not in register list, create it
-	tmpReg = (struct RegData *)calloc(1, sizeof(struct RegData));
+	tmpReg = malloc(sizeof(struct RegData));
 	tmpReg->type = DEV_TYPE_MASK(*id);
 	tmpReg->number_mask = 0x0001;
 	tmpReg->next = registered;

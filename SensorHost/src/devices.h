@@ -10,6 +10,7 @@
 
 //#include "global_config.h"
 #include "packet.h"
+#include <pthread.h>
 
 
 #ifndef DEVICE_DEBUG
@@ -62,5 +63,7 @@ extern int Device_waitForExit(void);
 
 extern int sendControl(struct Device dev);
 extern int queryData(struct Device * dev);
+
+extern pthread_mutex_t device_control_access;
 
 #endif /* SENSOR_H_ */

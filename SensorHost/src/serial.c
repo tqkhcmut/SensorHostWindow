@@ -167,6 +167,8 @@ int Serial_GetData(char * buffer, int len)
 		buffer[i] = serialGetchar(serial_fd);
 #endif
 	}
+	
+	//serialFlush(serial_fd);
 	return i;
 }
 

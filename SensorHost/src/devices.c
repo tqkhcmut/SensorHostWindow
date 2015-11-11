@@ -255,7 +255,8 @@ int DB_IsExist_sensor_types(int sensor_types_id, char *name, char * description)
 
 int sendControl(struct Device dev)
 {
-	int packet_len = 3 + getTypeLength(dev.data_type);
+	int data_len = getTypeLength(dev.data_type);
+	int packet_len = 4 + data_len;
 	struct Packet * packet = malloc(packet_len);
 
 	packet->id = dev.number | dev.type;
@@ -263,11 +264,12 @@ int sendControl(struct Device dev)
 #if __BYTE_ORDER == __BIG_ENDIAN
 	packet->data_type = (dev->data_type & 0x0f) | BIG_ENDIAN_BYTE_ORDER;
 #else
-	packet->data_type = (dev.data_type & 0x0f) | LITTLE_ENDIAN_BYTE_ORDER;
+	packet->data_type = DEV_TYPE_MASK(dev.data_type) | LITTLE_ENDIAN_BYTE_ORDER;
 #endif
-	memcpy(packet->data, dev.data, packet_len - 3);
+	memset(packet->data, 0, data_len);
+	packet->data[0] = dev.type | dev.number;
 	// add checksum byte
-	*(((char *)packet) + packet_len) = checksum((char *)packet);
+	*(((char *)packet) + packet_len - 1) = checksum((char *)packet);
 
 	Serial_SendMultiBytes((unsigned char *) packet, packet_len);
 	free(packet);
@@ -294,8 +296,8 @@ int DeviceInfo(struct Device * dev)
 
 int queryData(struct Device * dev)
 {
-	int packet_len;
-	struct Packet * packet = NULL;
+	int packet_len, data_len;
+	struct Packet * packet = malloc(128);
 
 	if (dev->data == NULL)
 	{
@@ -318,25 +320,27 @@ int queryData(struct Device * dev)
 
 	if (IS_MY_THESIS(dev->type))
 	{
-		packet_len = 3 + sizeof (struct ThesisData);
-		packet = malloc(packet_len + 1);
+		data_len = sizeof(struct ThesisData);
+		packet_len = 4 + data_len;
+		//packet = malloc(packet_len);
 	}
 	else
 	{
-		packet_len = 3 + getTypeLength(dev->data_type);
-		packet = malloc(packet_len + 1);
+		data_len = getTypeLength(dev->data_type);
+		packet_len = 4 + data_len;
+		//packet = malloc(packet_len);
 	}
 
 	packet->id = dev->number | dev->type;
 	packet->cmd = CMD_QUERY;
 #if __BYTE_ORDER == __BIG_ENDIAN
-	packet->data_type = (dev->data_type & 0x0f) | BIG_ENDIAN_BYTE_ORDER;
+	packet->data_type = DEV_TYPE_MASK(dev->data_type) | BIG_ENDIAN_BYTE_ORDER;
 #else
-	packet->data_type = (dev->data_type & 0x0f) | LITTLE_ENDIAN_BYTE_ORDER;
+	packet->data_type = DEV_TYPE_MASK(dev->data_type) | LITTLE_ENDIAN_BYTE_ORDER;
 #endif
-	memcpy(packet->data, dev->data, packet_len - 3);
+	memcpy(packet->data, dev->data, data_len);
 	// add checksum byte
-	*(((char *)packet) + packet_len) = checksum((char *)packet);
+	packet->data[data_len] = checksum((char *)packet);
 
 #if DEVICE_DEBUG
 	printf("Query Packet: ");
@@ -349,7 +353,7 @@ int queryData(struct Device * dev)
 	printf("\n");
 #endif
 
-	Serial_SendMultiBytes((unsigned char *) packet, packet_len + 1);
+	Serial_SendMultiBytes((unsigned char *) packet, packet_len);
 	// sleep 5ms for timeout
 	usleep(5000);
 	packet_len = Serial_Available();
@@ -363,6 +367,12 @@ int queryData(struct Device * dev)
 			printf("Wrong checksum.\n");
 #endif
 			// what should to do now?
+			if (packet != NULL)
+			{
+				free(packet);
+				packet = NULL;
+			}
+			return 0;
 		}
 
 #if DEVICE_DEBUG
@@ -375,24 +385,26 @@ int queryData(struct Device * dev)
 		printf("Checksum: %02X.\n", *(((char *)packet) + packet_len));
 		printf("\n");
 #endif
-
+		
+		// reallocating memory if not old data type
 		if (dev->data_type != DATA_TYPE_MASK(packet->data_type))
 		{
-			free(dev->data);
-			if (IS_MY_THESIS(packet->data_type & 0x0f))
+			if (dev->data != NULL)
+				free(dev->data);
+			if (IS_MY_THESIS(DEV_TYPE_MASK(packet->id)))
 			{
 				dev->data = malloc(sizeof(struct ThesisData));
 			}
 			else
 			{
-				dev->data = malloc(getTypeLength(packet->data_type & 0x0f));
+				dev->data = malloc(getTypeLength(DATA_TYPE_MASK(packet->data_type)));
 			}
 		}
 
 		dev->data_type = DATA_TYPE_MASK(packet->data_type);
 		dev->type = DEV_TYPE_MASK(packet->id);
 		dev->number = DEV_NUMBER_MASK(packet->id);
-		if (IS_MY_THESIS(packet->id))
+		if (IS_MY_THESIS(DEV_TYPE_MASK(packet->id)))
 		{
 			dev->polling_control.time_poll_ms = 500;
 			memcpy(dev->data, packet->data, sizeof (struct ThesisData));
@@ -402,13 +414,19 @@ int queryData(struct Device * dev)
 			memcpy(dev->data, packet->data, getTypeLength(packet->data_type));
 		}
 		if (packet != NULL)
+		{
 			free(packet);
+			packet = NULL;
+		}
 		return packet_len;
 	}
 	else
 	{
 		if (packet != NULL)
+		{
 			free(packet);
+			packet = NULL;
+		}
 		return 0;
 	}
 }
@@ -416,15 +434,15 @@ int queryData(struct Device * dev)
 void * DevicePolling(void * host_number) // thread
 {
 	unsigned char poll_en = 0;
-	unsigned int time_poll = 0;
+	unsigned int time_poll = 30000;
 	unsigned char destroy = 0;
 	int host = (int) host_number;
 	unsigned char trying_time = 0, dev_disconnect_try_time = 3;
 	float_struct_t my_float;
 
-	if (host >= DEV_HOST_NUMBER)
+	if  (host < 0 || host >= DEV_HOST_NUMBER)
 	{
-		printf("Host number not valid.\r\nIt should be lester than %d.\r\n", DEV_HOST_NUMBER);
+		printf("Host number not valid.\r\nIt should be greater or equal zero and lester than %d.\r\n", DEV_HOST_NUMBER);
 		printf("Thread exiting.\r\n");
 		pthread_exit(NULL);
 	}
@@ -457,6 +475,8 @@ void * DevicePolling(void * host_number) // thread
 
 		if (poll_en)
 		{
+			//while (pthread_mutex_trylock(&device_control_access) != 0)
+				//usleep(1000);
 			if (dev_host[host].type != DEV_UNKNOWN) // already known device type
 			{
 				trying_time = 0;
@@ -473,10 +493,13 @@ void * DevicePolling(void * host_number) // thread
 					printf("Thread: %d. host: %d. Fail to access serial port.\n",
 							(int)polling_thread[host], host);
 #endif
+					//pthread_mutex_unlock(&device_control_access);
+					usleep(time_poll);
+					continue;
 				}
 				else
 				{
-					RaspiExt_Pin_Hostx_Active(host);
+					RaspiExt_Pin_Hostx_Active(host + 1);
 					if (queryData(&dev_host[host]))
 					{
 #if DEVICE_DEBUG
@@ -501,6 +524,16 @@ void * DevicePolling(void * host_number) // thread
 								host, 
 								reg_id);	
 							UnRegisterID(&reg_id);
+							if (IS_MY_THESIS(DEV_TYPE_MASK(dev_host[host].type)))
+							{
+								if (dev_host[host].data != NULL)
+									memset(dev_host[host].data, 0, sizeof(struct ThesisData));
+							}
+							else
+							{
+								if (dev_host[host].data != NULL)
+								memset(dev_host[host].data, 0, getTypeLength(dev_host[host].type));
+							}
 							dev_host[host].type = DEV_UNKNOWN;
 							dev_host[host].number = DEV_NUMBER_UNKNOWN;
 						}
@@ -509,14 +542,14 @@ void * DevicePolling(void * host_number) // thread
 							dev_disconnect_try_time--;
 						}
 					}
-					RaspiExt_Pin_Hostx_Inactive(host);
-					pthread_mutex_unlock(&serial_access);
+					RaspiExt_Pin_Hostx_Inactive(host + 1);
 				}
+				pthread_mutex_unlock(&serial_access);
 
 				switch (dev_host[host].type)
 				{
 				case DEV_SENSOR_TEMPERATURE:
-					RaspiExt_LED_Hostx_Config(LED_MODE_TOGGLE, 1000, host);
+					RaspiExt_LED_Hostx_Config(LED_MODE_TOGGLE, 1000, host + 1);
 					
 					if (IS_BIG_ENDIAN_BYTE_ORDER(dev_host[host].data_type))
 					{
@@ -553,7 +586,7 @@ void * DevicePolling(void * host_number) // thread
 
 					break;
 				case DEV_SENSOR_ULTRA_SONIC:
-					RaspiExt_LED_Hostx_Config(LED_MODE_TOGGLE, 100, host);
+					RaspiExt_LED_Hostx_Config(LED_MODE_TOGGLE, 100, host + 1);
 					
 					my_float.f_byte[0] = dev_host[host].data[3];
 					my_float.f_byte[1] = dev_host[host].data[2];
@@ -587,7 +620,7 @@ void * DevicePolling(void * host_number) // thread
 
 					break;
 				case DEV_SENSOR_LIGTH:
-					RaspiExt_LED_Hostx_Config(LED_MODE_TOGGLE, 50, host);
+					RaspiExt_LED_Hostx_Config(LED_MODE_TOGGLE, 50, host + 1);
 					break;
 				case DEV_RF:
 					break;
@@ -596,12 +629,12 @@ void * DevicePolling(void * host_number) // thread
 				case DEV_BUZZER:
 					break;
 				case DEV_SENSOR_GAS:
-					RaspiExt_LED_Hostx_Config(LED_MODE_TOGGLE, 50, host);
+					RaspiExt_LED_Hostx_Config(LED_MODE_TOGGLE, 50, host + 1);
 					break;
 				case DEV_SIM900:
 					break;
 				case DEV_MY_THESIS:
-					RaspiExt_LED_Hostx_Config(LED_MODE_TOGGLE, 1000, host);
+					RaspiExt_LED_Hostx_Config(LED_MODE_TOGGLE, 1000, host + 1);
 					break;
 				default:
 #if DEVICE_DEBUG
@@ -615,7 +648,7 @@ void * DevicePolling(void * host_number) // thread
 			}
 			else // unknown device type
 			{
-				RaspiExt_LED_Hostx_Config(LED_MODE_OFF, 50, host);
+				RaspiExt_LED_Hostx_Config(LED_MODE_OFF, 50, host + 1);
 				
 #if DEVICE_DEBUG
 				printf("Thread: %d. host: %d. Unknown device, identifying.\n",
@@ -643,6 +676,8 @@ void * DevicePolling(void * host_number) // thread
 					printf("Thread: %d. host: %d. Fail to access serial port.\n",
 							(int)polling_thread[host], host);
 #endif
+					usleep(time_poll);
+					continue;
 				}
 				else
 				{
@@ -650,7 +685,7 @@ void * DevicePolling(void * host_number) // thread
 					//dev_host[host].type = DEV_SENSOR_ULTRA_SONIC;
 					//dev_host[host].number = 0x01;
 #endif
-					RaspiExt_Pin_Hostx_Active(host);
+					RaspiExt_Pin_Hostx_Active(host + 1);
 					if (queryData(&dev_host[host]))
 					{
 #if DEVICE_DEBUG
@@ -684,13 +719,16 @@ void * DevicePolling(void * host_number) // thread
 #endif
 
 					}
-					RaspiExt_Pin_Hostx_Inactive(host);
-
-					pthread_mutex_unlock(&serial_access);
+					RaspiExt_Pin_Hostx_Inactive(host + 1);
 				}
+
+				pthread_mutex_unlock(&serial_access);
 			}
 			usleep(time_poll);
+			
+			//pthread_mutex_unlock(&device_control_access);
 		}// query device
+		
 	}
 }
 int Device_init(void)
@@ -743,9 +781,9 @@ int Device_init(void)
 }
 int Device_startPooling(int host_number)
 {
-	if (host_number < 1 || host_number > 4)
+	if (host_number < 1 || host_number > DEV_HOST_NUMBER)
 	{
-		printf("Invalid Host Number. (1 - 4).\n");
+		printf("Invalid Host Number. (1 - %d).\n", DEV_HOST_NUMBER);
 		return -1;
 	}
 	while(pthread_mutex_trylock(&device_control_access) != 0)
@@ -760,11 +798,16 @@ int Device_startPooling(int host_number)
 
 int Device_stopPooling(int host_number)
 {
+	if (host_number < 1 || host_number > DEV_HOST_NUMBER)
+	{
+		printf("Invalid Host Number. (1 - %d).\n", DEV_HOST_NUMBER);
+		return -1;
+	}
 	while(pthread_mutex_trylock(&device_control_access) != 0)
 		usleep(100);
 
 	//	pthread_mutex_lock(&device_control_access);
-	dev_host[host_number].polling_control.enable = 0;
+	dev_host[host_number-1].polling_control.enable = 0;
 	pthread_mutex_unlock(&device_control_access);
 
 	return 0;

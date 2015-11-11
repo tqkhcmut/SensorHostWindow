@@ -494,7 +494,7 @@ int RaspiExt_LED_Hostx_Config(unsigned char mode, int time_ms, int host)
 #endif
 		return -1;
 	}
-	if (pthread_mutex_trylock(&led_token) == 0)
+	if (pthread_mutex_lock(&led_token) == 0)
 	{
 		
 		switch (host)
