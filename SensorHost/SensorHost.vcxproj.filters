@@ -136,6 +136,9 @@
     <ClCompile Include="db_com.c">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="SQLiteAPI.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />

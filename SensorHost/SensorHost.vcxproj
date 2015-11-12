@@ -64,6 +64,7 @@
     <ClCompile Include="db_com.c" />
     <ClCompile Include="queue.c" />
     <ClCompile Include="register.c" />
+    <ClCompile Include="SQLiteAPI.c" />
     <ClCompile Include="src\client.c" />
     <ClCompile Include="src\devices.c" />
     <ClCompile Include="src\ishare.c" />

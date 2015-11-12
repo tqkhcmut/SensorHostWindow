@@ -79,8 +79,8 @@ void * db_com_thread(void * host_list)
 			db_push_data.data[2].host_id, db_push_data.data[2].sensor_id, db_push_data.data[2].sensor_value,
 			db_push_data.data[3].host_id, db_push_data.data[3].sensor_id, db_push_data.data[3].sensor_value);
 		// call insert api function
-		//printf("%s\r\n", db_push_data.raw_data);
-		//insert_sensor_value(db_push_data);
+		printf("%s\r\n", db_push_data.raw_data);
+		insert_sensor_value(db_push_data);
 		
 		// sleep for the next polling
 		usleep(db_time_push);

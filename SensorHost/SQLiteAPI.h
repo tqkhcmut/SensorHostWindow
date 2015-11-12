@@ -1,6 +1,10 @@
 #ifndef SQLiteAPI_
 #define SQLiteAPI_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define SQL_STR_SIZE 512 // I think this is large enough to store string
 
 struct sensor_data
@@ -22,9 +26,13 @@ struct insert_data
 	char raw_data[SQL_STR_SIZE]; 
 };
 
-int connect_db(void);
-int execute_query(char *sql_query);
-int insert_sensor_value(struct insert_data data);
+	int ConnectDB(void);
+	void DisonnectDB(void);
 
+	int insert_sensor_value(struct insert_data data);
+	int is_collect_data(void);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

@@ -35,7 +35,7 @@ error:
 	$(error Invalid configuration, please check your inputs)
 endif
 
-SOURCEFILES := db_com.c queue.c register.c src/client.c src/devices.c src/ishare.c src/main.c src/packet.c src/raspi_ext.c src/serial.c src/wiringPi/drcSerial.c src/wiringPi/max31855.c src/wiringPi/max5322.c src/wiringPi/mcp23008.c src/wiringPi/mcp23016.c src/wiringPi/mcp23017.c src/wiringPi/mcp23s08.c src/wiringPi/mcp23s17.c src/wiringPi/mcp3002.c src/wiringPi/mcp3004.c src/wiringPi/mcp3422.c src/wiringPi/mcp4802.c src/wiringPi/pcf8574.c src/wiringPi/pcf8591.c src/wiringPi/piHiPri.c src/wiringPi/piThread.c src/wiringPi/sn3218.c src/wiringPi/softPwm.c src/wiringPi/softServo.c src/wiringPi/softTone.c src/wiringPi/sr595.c src/wiringPi/wiringPi.c src/wiringPi/wiringPiI2C.c src/wiringPi/wiringPiSPI.c src/wiringPi/wiringSerial.c src/wiringPi/wiringShift.c src/wiringPi/wpiExtensions.c
+SOURCEFILES := db_com.c queue.c register.c SQLiteAPI.c src/client.c src/devices.c src/ishare.c src/main.c src/packet.c src/raspi_ext.c src/serial.c src/wiringPi/drcSerial.c src/wiringPi/max31855.c src/wiringPi/max5322.c src/wiringPi/mcp23008.c src/wiringPi/mcp23016.c src/wiringPi/mcp23017.c src/wiringPi/mcp23s08.c src/wiringPi/mcp23s17.c src/wiringPi/mcp3002.c src/wiringPi/mcp3004.c src/wiringPi/mcp3422.c src/wiringPi/mcp4802.c src/wiringPi/pcf8574.c src/wiringPi/pcf8591.c src/wiringPi/piHiPri.c src/wiringPi/piThread.c src/wiringPi/sn3218.c src/wiringPi/softPwm.c src/wiringPi/softServo.c src/wiringPi/softTone.c src/wiringPi/sr595.c src/wiringPi/wiringPi.c src/wiringPi/wiringPiI2C.c src/wiringPi/wiringPiSPI.c src/wiringPi/wiringSerial.c src/wiringPi/wiringShift.c src/wiringPi/wpiExtensions.c
 EXTERNAL_LIBS := 
 EXTERNAL_LIBS_COPIED := $(foreach lib, $(EXTERNAL_LIBS),$(BINARYDIR)/$(notdir $(lib)))
 
