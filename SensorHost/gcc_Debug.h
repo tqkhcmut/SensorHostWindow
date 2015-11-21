@@ -624,9 +624,6 @@
 #endif
 
 // --- Include directories begin --- //
-///home/pi/ubuntu/VisualGDB/c/Users/kieutq/LinuxApp/SensorHostWindow/SensorHost/src
-///home/pi/ubuntu/VisualGDB/c/Users/kieutq/LinuxApp/SensorHostWindow/SensorHost/src/wiringPi
-///home/pi/ubuntu/VisualGDB/c/Users/kieutq/LinuxApp/SensorHostWindow/SensorHost
 ///usr/include/c++/4.6
 ///usr/include/c++/4.6/arm-linux-gnueabihf
 ///usr/include/c++/4.6/backward

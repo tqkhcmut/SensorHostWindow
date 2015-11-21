@@ -260,7 +260,7 @@ int sendControl(struct Device dev)
 	struct Packet * packet = malloc(packet_len);
 
 	packet->id = dev.number | dev.type;
-	packet->cmd = CMD_CONTROL;
+	packet->cmd = CMD_TYPE_CONTROL;
 #if __BYTE_ORDER == __BIG_ENDIAN
 	packet->data_type = (dev->data_type & 0x0f) | BIG_ENDIAN_BYTE_ORDER;
 #else
@@ -332,7 +332,7 @@ int queryData(struct Device * dev)
 	}
 
 	packet->id = dev->number | dev->type;
-	packet->cmd = CMD_QUERY;
+	packet->cmd = CMD_TYPE_QUERY;
 #if __BYTE_ORDER == __BIG_ENDIAN
 	packet->data_type = DEV_TYPE_MASK(dev->data_type) | BIG_ENDIAN_BYTE_ORDER;
 #else
@@ -763,7 +763,7 @@ int Device_init(void)
 	for (i = 0; i < DEV_HOST_NUMBER; i++)
 	{
 		printf("Initial Sensor Host %d parameters.\r\n", i);
-		dev_host[i].data_type = TYPE_FLOAT;
+		dev_host[i].data_type = DATA_TYPE_FLOAT;
 		dev_host[i].number = DEV_NUMBER_UNKNOWN;	// unknown
 		dev_host[i].type = DEV_UNKNOWN;		// unknown
 		dev_host[i].data = NULL;
